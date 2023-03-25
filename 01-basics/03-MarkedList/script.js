@@ -35,7 +35,6 @@ const App = defineComponent({
     return {
       emails: emails,
       filter: '',
-      marked: '',
     };
   },
   computed: {
