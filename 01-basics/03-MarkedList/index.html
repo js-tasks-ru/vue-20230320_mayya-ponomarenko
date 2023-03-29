@@ -16,8 +16,8 @@
         <div class="form-group">
           <input type="search" v-model="filter"/>
         </div>
-        <ul v-for="(email, idx) in emails" :key="idx">
-          <li :class="{ 'marked': isMarkedEmail(email)}">{{ email }}</li>
+        <ul v-for="(email, idx) in emailsWithMarker" :key="idx">
+          <li :class="{ 'marked': email.isMarker}">{{ email.address }}</li>
         </ul>
       </div>
     </div>

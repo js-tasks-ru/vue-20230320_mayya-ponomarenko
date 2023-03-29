@@ -38,18 +38,17 @@ const App = defineComponent({
     };
   },
   computed: {
-    filterEmails() {
-      if (this.filter) {
-        return emails.filter(email => email.toLowerCase().includes(this.filter.toLowerCase()));
-      } else return null;
-    }
-  },
-  methods: {
-    isMarkedEmail(email) {
-      if(this.filterEmails && this.filterEmails.some(em => em === email)){
-        return true;
-      }
-      return false;
+    emailsWithMarker() {
+      const emails = [];
+
+      this.emails.forEach((email) => {
+        if (this.filter && email.toLowerCase().includes(this.filter.toLowerCase())) {
+          emails.push({address: email, isMarker: true})
+        } else {
+          emails.push({address: email, isMarker: false})
+        }
+      })
+      return emails;
     }
   },
 });
