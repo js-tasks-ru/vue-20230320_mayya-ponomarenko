@@ -10,7 +10,4 @@ export default defineComponent({
   },
 
   template: `<p class="meetup-description">{{ description }}</p>`,
-  mounted() {
-    console.log(this.description);
-  },
 });
