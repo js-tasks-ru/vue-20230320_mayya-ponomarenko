@@ -20,7 +20,7 @@ export default defineComponent({
   },
   computed: {
     imageBackground (): string {
-      return this.image ? `url('https://course-vue.javascript.ru/api/images/2')` : 'var(--default-cover)';
+      return this.image ? `url('${this.image}')` : 'var(--default-cover)';
     }
   }
 });
