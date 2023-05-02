@@ -1,22 +1,39 @@
 <template>
   <div class="meetup-cover">
-    <h1 class="meetup-cover__title">Title</h1>
+    <h1 class="meetup-cover__title">{{ title }}</h1>
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
   name: 'MeetupCover',
-};
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: false,
+    }
+  },
+  computed: {
+    imageBackground (): string {
+      return this.image ? `url('${this.image}')` : 'var(--default-cover)';
+    }
+  }
+});
 </script>
 
 <style scoped>
 .meetup-cover {
   background-size: cover;
   background-position: center;
-  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('https://course-vue.javascript.ru/api/images/2');
-  /* background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--default-cover); */
+  background-image:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.4)),
+    v-bind(imageBackground);
   display: flex;
   flex-direction: column;
   align-items: center;
