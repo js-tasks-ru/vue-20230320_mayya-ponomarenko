@@ -1,24 +1,61 @@
 <template>
   <div class="toasts">
-    <div class="toast toast_success">
-      <UiIcon class="toast__icon" icon="check-circle" />
-      <span>Success Toast Example</span>
-    </div>
-
-    <div class="toast toast_error">
-      <UiIcon class="toast__icon" icon="alert-circle" />
-      <span>Error Toast Example</span>
-    </div>
+    <template v-for="(toast, idx) in toasts" :key="idx">
+      <UiToast
+        :text-message="toast.textMessage"
+        :is-success="toast.isSuccess"
+      />
+    </template>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import UiIcon from './UiIcon.vue';
+import UiToast from "./UiToast.vue";
 
 export default {
   name: 'TheToaster',
-
-  components: { UiIcon },
+  data() {
+    return {
+      textMessage: '',
+      isSuccess: false,
+      toasts: [],
+    }
+  },
+  components: {UiToast, UiIcon },
+  methods: {
+    error(text: string) {
+      this.isSuccess = false;
+      this.textMessage = text;
+      this.addInListToasts();
+    },
+    success(text: string) {
+      this.isSuccess = true;
+      this.textMessage = text;
+      this.addInListToasts();
+    },
+    addInListToasts() {
+      this.toasts.push({
+        isSuccess: this.isSuccess,
+        textMessage: this.textMessage,
+      });
+    },
+    deleteLastToast(time: number) {
+      setTimeout(() => {
+        this.toasts.pop();
+      }, time)
+    }
+  },
+  watch: {
+    toasts: {
+      deep: true,
+      handler(newToasts: any) {
+        if (newToasts.length > 0) {
+          this.deleteLastToast(5000);
+        }
+      },
+    }
+  }
 };
 </script>
 
