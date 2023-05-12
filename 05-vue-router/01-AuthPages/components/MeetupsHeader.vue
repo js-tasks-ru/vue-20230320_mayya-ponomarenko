@@ -1,6 +1,8 @@
 <template>
   <header class="header">
-    <MeetupsLogo />
+    <RouterLink :to="{name: 'index'}">
+      <MeetupsLogo />
+    </RouterLink>
     <MeetupsNav />
   </header>
 </template>

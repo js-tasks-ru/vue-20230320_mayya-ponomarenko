@@ -1,23 +1,25 @@
 <template>
-  <div class="form-group" :class="{ 'form-group_inline': inline }">
-    <label v-if="label" class="form-label">{{ label }}</label>
-    <slot />
+  <div class="form-group" :class="{ 'form-group_inline': inline}">
+      <label v-if="label" class="form-group__label">{{ label }}</label>
+      <slot />
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
   name: 'UiFormGroup',
-
   props: {
     inline: {
       type: Boolean,
       default: false,
     },
-
-    label: String,
-  },
-};
+    label: {
+      type: String,
+      required: false,
+    }
+  }
+});
 </script>
 
 <style scoped>
@@ -35,7 +37,7 @@ export default {
   margin-left: 16px;
 }
 
-.form-label {
+.form-group__label {
   font-weight: 400;
   font-size: 20px;
   line-height: 28px;
