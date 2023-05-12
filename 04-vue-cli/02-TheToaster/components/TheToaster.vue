@@ -19,6 +19,7 @@ export default {
     return {
       textMessage: '',
       isSuccess: false,
+      toastId: 0,
       toasts: [],
     }
   },
@@ -35,27 +36,22 @@ export default {
       this.addInListToasts();
     },
     addInListToasts() {
+      this.toastId++;
       this.toasts.push({
+        id: this.toastId,
         isSuccess: this.isSuccess,
         textMessage: this.textMessage,
       });
+      this.deleteToast(5000, this.toastId);
     },
-    deleteLastToast(time: number) {
+    deleteToast(time: number, toastId: number) {
       setTimeout(() => {
-        this.toasts.pop();
+        const toastForDelete = this.toasts.find((toast) => toast.id === toastId);
+        const index = this.toasts.indexOf(toastForDelete);
+        this.toasts.splice(index, 1);
       }, time)
     }
   },
-  watch: {
-    toasts: {
-      deep: true,
-      handler(newToasts: any) {
-        if (newToasts.length > 0) {
-          this.deleteLastToast(5000);
-        }
-      },
-    }
-  }
 };
 </script>
 
