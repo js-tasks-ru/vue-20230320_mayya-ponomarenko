@@ -1,24 +1,53 @@
 <template>
   <div class="toasts">
-    <div class="toast toast_success">
-      <UiIcon class="toast__icon" icon="check-circle" />
-      <span>Success Toast Example</span>
-    </div>
-
-    <div class="toast toast_error">
-      <UiIcon class="toast__icon" icon="alert-circle" />
-      <span>Error Toast Example</span>
-    </div>
+      <UiToast
+        v-for="(toast, idx) in toasts"
+        :key="idx"
+        :text-message="toast.textMessage"
+        :is-success="toast.isSuccess"
+      />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import UiIcon from './UiIcon.vue';
+import UiToast from "./UiToast.vue";
 
 export default {
   name: 'TheToaster',
-
-  components: { UiIcon },
+  data() {
+    return {
+      isSuccess: false,
+      toastId: 0,
+      toasts: [],
+    }
+  },
+  components: {UiToast, UiIcon },
+  methods: {
+    error(text: string) {
+      this.isSuccess = false;
+      this.addInListToasts(text, this.isSuccess);
+    },
+    success(text: string) {
+      this.isSuccess = true;
+      this.addInListToasts(text, this.isSuccess);
+    },
+    addInListToasts(text: string, isSuccess: boolean) {
+      this.toastId++;
+      this.toasts.push({
+        id: this.toastId,
+        isSuccess: isSuccess,
+        textMessage: text,
+      });
+      this.deleteToast(5000, this.toastId);
+    },
+    deleteToast(time: number, toastId: number) {
+      setTimeout(() => {
+        const index = this.toasts.findIndex((toast) => toast.id === toastId);
+        this.toasts.splice(index, 1);
+      }, time)
+    }
+  },
 };
 </script>
 
