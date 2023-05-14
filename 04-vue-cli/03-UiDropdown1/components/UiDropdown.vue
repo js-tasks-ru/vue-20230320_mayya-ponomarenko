@@ -16,8 +16,9 @@
     </button>
 
     <div v-show="isOpen" class="dropdown__menu" role="listbox">
-      <template v-for="(option, idx) in options" :key="idx">
         <button
+          v-for="(option, idx) in options"
+          :key="idx"
           class="dropdown__item"
           :class="{ 'dropdown__item_icon': hasIcon }"
           role="option"
@@ -27,7 +28,6 @@
           <UiIcon v-if="option.icon" :icon="option.icon ? option.icon : ''" class="dropdown__icon" />
           {{ option.text }}
         </button>
-      </template>
     </div>
   </div>
 </template>
@@ -53,37 +53,25 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
-      selectedItem: null,
+      isOpen: false
     };
   },
   emits: ['update:modelValue'],
   computed: {
     hasIcon() {
-      // eslint-disable-next-line no-prototype-builtins
-      return this.options.some((option) => option.hasOwnProperty('icon'))
+      return this.options.some((option) => option.icon)
+    },
+    selectedItem() {
+      if (!this.modelValue) return null;
+      return this.options.find(option => option.value === this.modelValue)
     }
   },
   methods: {
     selectItem(option) {
-      this.selectedItem = option;
-      this.$emit('update:modelValue', option.value);
+      this.$emit('update:modelValue', option.value)
       this.isOpen = false;
-    },
-    setSelectedItem(value) {
-      this.selectedItem = this.options.find(option => option.value === value);
     }
   },
-  watch: {
-    modelValue(newValue) {
-      this.setSelectedItem(newValue)
-    }
-  },
-  created() {
-    if (this.modelValue) {
-      this.setSelectedItem(this.modelValue)
-    }
-  }
 };
 </script>
 

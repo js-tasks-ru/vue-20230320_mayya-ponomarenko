@@ -1,11 +1,11 @@
 <template>
   <div class="toasts">
-    <template v-for="(toast, idx) in toasts" :key="idx">
       <UiToast
+        v-for="(toast, idx) in toasts"
+        :key="idx"
         :text-message="toast.textMessage"
         :is-success="toast.isSuccess"
       />
-    </template>
   </div>
 </template>
 
@@ -17,37 +17,30 @@ export default {
   name: 'TheToaster',
   data() {
     return {
-      textMessage: '',
-      isSuccess: false,
       toastId: 0,
       toasts: [],
     }
   },
   components: {UiToast, UiIcon },
   methods: {
-    error(text: string) {
-      this.isSuccess = false;
-      this.textMessage = text;
-      this.addInListToasts();
+    error(text: string, isSuccess: boolean) {
+      this.addInListToasts(text, isSuccess);
     },
-    success(text: string) {
-      this.isSuccess = true;
-      this.textMessage = text;
-      this.addInListToasts();
+    success(text: string, isSuccess: boolean) {
+      this.addInListToasts(text, isSuccess);
     },
-    addInListToasts() {
+    addInListToasts(text: string, isSuccess: boolean) {
       this.toastId++;
       this.toasts.push({
         id: this.toastId,
-        isSuccess: this.isSuccess,
-        textMessage: this.textMessage,
+        isSuccess: isSuccess,
+        textMessage: text,
       });
       this.deleteToast(5000, this.toastId);
     },
     deleteToast(time: number, toastId: number) {
       setTimeout(() => {
-        const toastForDelete = this.toasts.find((toast) => toast.id === toastId);
-        const index = this.toasts.indexOf(toastForDelete);
+        const index = this.toasts.findIndex((toast) => toast.id === toastId);
         this.toasts.splice(index, 1);
       }, time)
     }
