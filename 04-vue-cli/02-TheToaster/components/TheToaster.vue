@@ -17,17 +17,20 @@ export default {
   name: 'TheToaster',
   data() {
     return {
+      isSuccess: false,
       toastId: 0,
       toasts: [],
     }
   },
   components: {UiToast, UiIcon },
   methods: {
-    error(text: string, isSuccess: boolean) {
-      this.addInListToasts(text, isSuccess);
+    error(text: string) {
+      this.isSuccess = false;
+      this.addInListToasts(text, this.isSuccess);
     },
-    success(text: string, isSuccess: boolean) {
-      this.addInListToasts(text, isSuccess);
+    success(text: string) {
+      this.isSuccess = true;
+      this.addInListToasts(text, this.isSuccess);
     },
     addInListToasts(text: string, isSuccess: boolean) {
       this.toastId++;

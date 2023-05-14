@@ -16,11 +16,11 @@ export default {
 
   methods: {
     handleSuccessClick() {
-      this.$refs.toaster.success('Success ' + new Date().toLocaleTimeString(), true);
+      this.$refs.toaster.success('Success ' + new Date().toLocaleTimeString());
     },
 
     handleErrorClick() {
-      this.$refs.toaster.error('Error ' + new Date().toLocaleTimeString(), false);
+      this.$refs.toaster.error('Error ' + new Date().toLocaleTimeString());
     },
   },
 };
