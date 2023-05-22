@@ -1,18 +1,18 @@
 <template>
-  <form class="meetup-form">
+  <form v-if="meetupBackup" class="meetup-form" @submit.prevent="submit">
     <div class="meetup-form__content">
       <fieldset class="meetup-form__section">
         <UiFormGroup label="Название">
-          <UiInput name="title" />
+          <UiInput name="title" v-model="meetupBackup.title" />
         </UiFormGroup>
         <UiFormGroup label="Дата">
-          <UiInputDate type="date" name="date" />
+          <UiInputDate type="date" name="date" v-model="meetupBackup.date"/>
         </UiFormGroup>
-        <UiFormGroup label="Место">
-          <UiInput name="place" />
+        <UiFormGroup label="Место" >
+          <UiInput name="place" v-model="meetupBackup.place" />
         </UiFormGroup>
-        <UiFormGroup label="Описание">
-          <UiInput multiline rows="3" name="description" />
+        <UiFormGroup label="Описание" >
+          <UiInput multiline rows="3" name="description" v-model="meetupBackup.description" />
         </UiFormGroup>
         <UiFormGroup label="Изображение">
           <!--
@@ -20,25 +20,26 @@
                и передавать в объекте со всеми данными формы
           -->
           <ui-image-uploader
+            v-if="meetupBackup"
             name="image"
-            :preview="meetup.image"
-            @select="meetup.imageToUpload = $event"
-            @remove="meetup.imageToUpload = null"
+            :preview="meetupBackup.image"
+            @select="meetupBackup.imageToUpload = $event"
+            @remove="meetupBackup.imageToUpload = null"
           />
         </UiFormGroup>
       </fieldset>
 
       <h3 class="meetup-form__agenda-title">Программа</h3>
-      <!--
-      <meetup-agenda-item-form
-         :key="agendaItem.id"
-         :agenda-item="..."
-         class="meetup-form__agenda-item"
-       />
-       -->
+        <MeetupAgendaItemForm
+          v-for="(agendaItem, index) in meetupBackup.agenda"
+          :key="agendaItem.id"
+          v-model:agenda-item="meetupBackup.agenda[index]"
+          class="meetup-form__agenda-item"
+          @remove="removeAgendaItem(index)"
+        />
 
       <div class="meetup-form__append">
-        <button class="meetup-form__append-button" type="button" data-test="addAgendaItem">
+        <button class="meetup-form__append-button" type="button" data-test="addAgendaItem" @click="addAgendaItem">
           + Добавить этап программы
         </button>
       </div>
@@ -47,9 +48,9 @@
     <div class="meetup-form__aside">
       <div class="meetup-form__aside-stick">
         <!-- data-test атрибуты используются для поиска нужного элемента в тестах, не удаляйте их -->
-        <ui-button variant="secondary" block class="meetup-form__aside-button" data-test="cancel">Отмена</ui-button>
-        <ui-button variant="primary" block class="meetup-form__aside-button" data-test="submit" type="submit">
-          SUBMIT
+        <ui-button variant="secondary" block class="meetup-form__aside-button" data-test="cancel" @click="cancel">Отмена</ui-button>
+        <ui-button variant="primary" block class="meetup-form__aside-button" data-test="submit" type="submit" @submit.prevent="submit">
+          {{ submitText }}
         </ui-button>
       </div>
     </div>
@@ -63,10 +64,12 @@ import UiFormGroup from './UiFormGroup.vue';
 import UiImageUploader from './UiImageUploader.vue';
 import UiInput from './UiInput.vue';
 import UiInputDate from './UiInputDate.vue';
-// import { createAgendaItem } from '../meetupService.js';
+import {createAgendaItem} from "../meetupService";
+import {klona} from "klona";
 
 export default {
   name: 'MeetupForm',
+  emits: ['submit', 'cancel', 'remove'],
 
   components: {
     MeetupAgendaItemForm,
@@ -88,6 +91,34 @@ export default {
       default: '',
     },
   },
+  data() {
+    return {
+      meetupBackup: null,
+    }
+  },
+  methods: {
+    cancel() {
+      this.$emit('cancel')
+    },
+    submit() {
+      const dataMeetup = klona(this.meetupBackup)
+      this.$emit('submit', dataMeetup);
+    },
+    addAgendaItem() {
+      const newAgendaItem = createAgendaItem();
+      if (this.meetupBackup.agenda.length > 0){
+        newAgendaItem.startsAt = this.meetupBackup.agenda[this.meetupBackup.agenda.length -1].endsAt;
+      }
+      this.meetupBackup.agenda.push(newAgendaItem);
+    },
+    removeAgendaItem(index) {
+      this.$emit('remove', index);
+      this.meetupBackup.agenda.splice(index, 1)
+    },
+  },
+  mounted() {
+    this.meetupBackup = klona(this.meetup);
+  }
 };
 </script>
 
